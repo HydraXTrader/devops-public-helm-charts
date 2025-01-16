@@ -1,5 +1,6 @@
 # devops-public-helm-charts
-HydraX Public Helm Charts
+
+https://hydraxtrader.github.io/devops-public-helm-charts
 
 Available charts:
 - [metabase](charts/metabase)
