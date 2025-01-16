@@ -1,0 +1,21 @@
+apiVersion: v1
+entries:
+  metabase:
+  - apiVersion: v2
+    appVersion: 0.52.6
+    created: "2025-01-16T04:47:50.383286384Z"
+    description: Metabase helm chart
+    digest: 34bf3d902a1afe581bcf3558ffc1d197e6fe927101a38983718816f3b8c20d9d
+    home: http://www.metabase.com/
+    icon: http://www.metabase.com/images/logo.svg
+    maintainers:
+    - name: HydraX
+      url: https://github.com/HydraXTrader
+    name: metabase
+    sources:
+    - https://github.com/metabase/metabase
+    type: application
+    urls:
+    - metabase-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-01-16T04:47:50.383291404Z"
