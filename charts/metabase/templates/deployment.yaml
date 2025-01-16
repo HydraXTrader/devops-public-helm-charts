@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "metabase.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "metabase.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "metabase.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "metabase.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: MB_DB_TYPE
+            value: {{ .Values.database.type | lower }}
+          {{- if or .Values.database.existingSecretConnectionURIKey .Values.database.connectionURI }}
+          - name: MB_DB_CONNECTION_URI
+            valueFrom:
+              secretKeyRef:
+                name: {{ or .Values.database.existingSecret (printf "%s-database" (include "metabase.fullname" .)) }}
+                key: {{ or .Values.database.existingSecretConnectionURIKey "connectionURI" }}
+          {{- else }}
+          - name: MB_DB_HOST
+            value: {{ .Values.database.host | quote }}
+          - name: MB_DB_PORT
+            value: {{ .Values.database.port | quote }}
+          - name: MB_DB_DBNAME
+            value: {{ .Values.database.dbname | quote }}
+          - name: MB_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ or .Values.database.existingSecret (printf "%s-database" (include "metabase.fullname" .)) }}
+                key: {{ or .Values.database.existingSecretUsernameKey "username" }}
+          - name: MB_DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ or .Values.database.existingSecret (printf "%s-database" (include "metabase.fullname" .)) }}
+                key: {{ or .Values.database.existingSecretPasswordKey "password" }}
+          {{- end }}
+          {{- if .Values.extraEnv }}
+          {{- range $key, $value := .Values.extraEnv }}
+          - name: {{ $key }}
+            value: {{ $value }}
+          {{- end }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
