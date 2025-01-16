@@ -1,6 +1,6 @@
 # metabase
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.52.6](https://img.shields.io/badge/AppVersion-0.52.6-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.52.6](https://img.shields.io/badge/AppVersion-0.52.6-informational?style=flat-square)
 
 Metabase helm chart
 
@@ -45,21 +45,21 @@ Metabase helm chart
 | ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
 | ingress.labels | object | `{}` |  |
 | ingress.tls | list | `[]` |  |
-| livenessProbe.httpGet.failureThreshold | int | `6` |  |
-| livenessProbe.httpGet.initialDelaySeconds | int | `120` |  |
+| livenessProbe.failureThreshold | int | `6` |  |
 | livenessProbe.httpGet.path | string | `"/api/health"` |  |
-| livenessProbe.httpGet.port | string | `"http"` |  |
-| livenessProbe.httpGet.timeoutSeconds | int | `30` |  |
+| livenessProbe.httpGet.port | int | `3000` |  |
+| livenessProbe.initialDelaySeconds | int | `120` |  |
+| livenessProbe.timeoutSeconds | int | `30` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| readinessProbe.httpGet.initialDelaySeconds | int | `30` |  |
 | readinessProbe.httpGet.path | string | `"/api/health"` |  |
-| readinessProbe.httpGet.periodSeconds | int | `5` |  |
-| readinessProbe.httpGet.port | string | `"http"` |  |
-| readinessProbe.httpGet.timeoutSeconds | int | `3` |  |
+| readinessProbe.httpGet.port | int | `3000` |  |
+| readinessProbe.initialDelaySeconds | int | `30` |  |
+| readinessProbe.periodSeconds | int | `5` |  |
+| readinessProbe.timeoutSeconds | int | `3` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
